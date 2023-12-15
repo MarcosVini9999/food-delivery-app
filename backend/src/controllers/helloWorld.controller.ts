@@ -1,9 +1,9 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 
 async function Show(request: FastifyRequest, reply: FastifyReply) {
-  const message = "Hello World!";
+  const data = { message: "Hello World!" };
 
-  reply.send(message);
+  reply.send(data);
 }
 
 export { Show };

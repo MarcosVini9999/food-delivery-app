@@ -1,7 +1,10 @@
 import fastify, { FastifyInstance } from "fastify";
 import helloWorldRoutes from "./routes/helloWorld.routes";
+import cors from "@fastify/cors";
 
 const app: FastifyInstance = fastify({ logger: true });
+
+app.register(cors, { origin: true });
 
 app.register(helloWorldRoutes);
 
