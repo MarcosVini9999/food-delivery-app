@@ -1,12 +1,17 @@
 import fastify, { FastifyInstance } from "fastify";
-import helloWorldRoutes from "./routes/helloWorld.routes";
 import cors from "@fastify/cors";
+import "module-alias/register";
+import { helloWorldRoutes, publicRoutes, userRoutes } from "@/routes";
 
-const app: FastifyInstance = fastify({ logger: true });
+const app: FastifyInstance = fastify({ logger: false });
 
 app.register(cors, { origin: true });
 
+app.decorateReply("locals", { user: null });
+
 app.register(helloWorldRoutes);
+app.register(publicRoutes);
+app.register(userRoutes);
 
 const port = Number(process.env.PORT) || 3333;
 
