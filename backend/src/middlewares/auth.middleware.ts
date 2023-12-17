@@ -9,11 +9,11 @@ async function authMiddleware(request: IFastifyRequestWithUser, reply: FastifyRe
     authorization: z.string(),
   });
 
-  console.log(request.headers);
-
   const { authorization } = BodySchema.parse(request.headers);
 
-  const decoded = jsonwebtoken.verify(authorization, process.env.JWT_SECRET?.toString() || "");
+  const decoded = jsonwebtoken.verify(authorization, process.env.JWT_SECRET?.toString() || "", {
+    maxAge: "10h",
+  });
 
   if (!decoded) return reply.status(401).send();
 

@@ -5,8 +5,8 @@ import { authMiddleware } from "@/middlewares/auth.middleware";
 export async function userRoutes(app: FastifyInstance) {
   app.addHook("preHandler", authMiddleware);
   app.get("/users", List);
-  app.get("/users/:id", Show);
-  app.post("/users", Create);
-  app.put("/users/:id", Update);
-  app.delete("/users/:id", Delete);
+  app.get("/user/:id", Show);
+  app.post("/user", Create);
+  app.put("/user/:id", Update);
+  app.delete("/user/:id", Delete);
 }

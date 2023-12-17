@@ -9,14 +9,33 @@ async function Create(request: FastifyRequest, reply: FastifyReply) {
     name: z.string(),
     email: z.string().email(),
     password: z.string(),
+    cpf: z.string().min(11).max(11),
+    cep: z.string().min(8).max(8),
+    phone: z.string().min(9),
+    city: z.string(),
+    street: z.string(),
+    number: z.string(),
+    address_complement: z.string(),
   });
 
-  const { name, email, password } = BodySchema.parse(request.body);
+  const { name, email, password, cpf, cep, phone, city, street, number, address_complement } =
+    BodySchema.parse(request.body);
 
   const hashedPassword = await bcrypt.hash(password, 12);
 
   const user = await prisma.user.create({
-    data: { name, email, password: hashedPassword },
+    data: {
+      name,
+      email,
+      password: hashedPassword,
+      cpf,
+      cep,
+      phone,
+      city,
+      street,
+      number,
+      address_complement,
+    },
   });
 
   if (!user) return reply.status(404).send();
@@ -33,6 +52,13 @@ async function List(request: FastifyRequest, reply: FastifyReply) {
     id: user.id,
     name: user.name,
     email: user.email,
+    cpf: user.cpf,
+    cep: user.cep,
+    phone: user.phone,
+    city: user.city,
+    street: user.street,
+    number: user.number,
+    address_complement: user.address_complement,
     createdAt: user.createdAt,
     updatedAt: user.updatedAt,
   }));
@@ -53,6 +79,13 @@ async function Show(request: FastifyRequest, reply: FastifyReply) {
     id: user.id,
     name: user.name,
     email: user.email,
+    cpf: user.cpf,
+    cep: user.cep,
+    phone: user.phone,
+    city: user.city,
+    street: user.street,
+    number: user.number,
+    address_complement: user.address_complement,
     createdAt: user.createdAt,
     updatedAt: user.updatedAt,
   });
@@ -63,14 +96,22 @@ async function Update(request: FastifyRequest, reply: FastifyReply) {
     name: z.string().optional(),
     email: z.string().email().optional(),
     password: z.string().optional(),
+    cpf: z.string().min(11).max(11),
+    cep: z.string().min(8).max(8),
+    phone: z.string().min(9),
+    city: z.string(),
+    street: z.string(),
+    number: z.string(),
+    address_complement: z.string(),
   });
 
   const { id } = ParamsSchema.parse(request.params);
 
-  const { name, email, password } = BodySchema.parse(request.body);
+  const { name, email, password, cpf, cep, phone, city, street, number, address_complement } =
+    BodySchema.parse(request.body);
 
   const user = await prisma.user.update({
-    data: { name, email, password },
+    data: { name, email, password, cpf, cep, phone, city, street, number, address_complement },
     where: { id },
   });
 
@@ -80,6 +121,13 @@ async function Update(request: FastifyRequest, reply: FastifyReply) {
     id: user.id,
     name: user.name,
     email: user.email,
+    cpf: user.cpf,
+    cep: user.cep,
+    phone: user.phone,
+    city: user.city,
+    street: user.street,
+    number: user.number,
+    address_complement: user.address_complement,
     createdAt: user.createdAt,
     updatedAt: user.updatedAt,
   });
