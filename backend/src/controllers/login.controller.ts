@@ -24,6 +24,7 @@ async function Login(request: FastifyRequest, reply: FastifyReply) {
 
   const token = jsonwebtoken.sign({ id: user.id }, process.env.JWT_SECRET?.toString() || "", {
     algorithm: "HS256",
+    expiresIn: "10h",
   });
 
   reply.status(200).send({ token, email });
