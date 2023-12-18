@@ -8,7 +8,7 @@ import {
   OutlinedInput,
   TextField,
 } from "@mui/material";
-import { FC, FormEvent, useState } from "react";
+import { FC, FormEvent, useEffect, useState } from "react";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { useNavigate } from "react-router-dom";
@@ -20,7 +20,7 @@ export const LoginPage: FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const { authenticate } = useAuth();
+  const { authenticate, user } = useAuth();
   const navigate = useNavigate();
 
   const handleEmail = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -63,6 +63,30 @@ export const LoginPage: FC = () => {
 
     navigate("/menu");
   };
+
+  const checkLogin = async () => {
+    if (!user.token) return;
+
+    let isLogged = false;
+
+    try {
+      const response = await apiFood.get("/users", {
+        headers: {
+          Authorization: user.token,
+        },
+      });
+
+      if (response.status === 200) isLogged = true;
+    } catch (error) {
+      console.error(error);
+    }
+
+    if (isLogged) navigate("/menu");
+  };
+
+  useEffect(() => {
+    checkLogin();
+  }, []);
 
   return (
     <>
