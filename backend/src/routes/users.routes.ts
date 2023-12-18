@@ -6,7 +6,6 @@ export async function userRoutes(app: FastifyInstance) {
   app.addHook("preHandler", authMiddleware);
   app.get("/users", List);
   app.get("/user/:id", Show);
-  app.post("/user", Create);
   app.put("/user/:id", Update);
   app.delete("/user/:id", Delete);
 }
