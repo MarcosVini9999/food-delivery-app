@@ -1,12 +1,12 @@
-import React, { useState, ChangeEvent } from "react";
+import { useState, ChangeEvent, FC } from "react";
 import { AxiosRequestConfig } from "axios";
 import apiFood from "@/services/apiFood";
+import useAuth from "@/context/AuthContext";
 
-interface ImageUploadProps {}
-
-export const ImageUpload: React.FC<ImageUploadProps> = () => {
+export const ImageUpload: FC = () => {
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [uploadProgress, setUploadProgress] = useState<number>(0);
+  const { user } = useAuth();
 
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -27,6 +27,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = () => {
     const config: AxiosRequestConfig = {
       headers: {
         "Content-Type": "multipart/form-data",
+        Authorization: user.token,
       },
       onUploadProgress: (progressEvent) => {
         if (progressEvent.total) {
@@ -37,14 +38,12 @@ export const ImageUpload: React.FC<ImageUploadProps> = () => {
     };
 
     try {
-      const response = await apiFood.post("/upload", formData, config);
+      await apiFood.post("/upload", formData, config);
 
-      console.log("Upload successful:", response.data);
-      // Limpar o estado após o upload bem-sucedido
       setSelectedImage(null);
       setUploadProgress(0);
     } catch (error) {
-      console.error("Erro durante o upload:", error);
+      console.error(error);
     }
   };
 
