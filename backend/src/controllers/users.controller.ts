@@ -99,7 +99,6 @@ async function Update(request: FastifyRequest, reply: FastifyReply) {
   const BodySchema = z.object({
     name: z.string().optional(),
     email: z.string().email().optional(),
-    password: z.string().optional(),
     cpf: z.string().min(11).max(11),
     cep: z.string().min(8).max(8),
     phone: z.string().min(9),
@@ -111,11 +110,11 @@ async function Update(request: FastifyRequest, reply: FastifyReply) {
 
   const { id } = ParamsSchema.parse(request.params);
 
-  const { name, email, password, cpf, cep, phone, city, street, number, address_complement } =
+  const { name, email, cpf, cep, phone, city, street, number, address_complement } =
     BodySchema.parse(request.body);
 
   const user = await prisma.user.update({
-    data: { name, email, password, cpf, cep, phone, city, street, number, address_complement },
+    data: { name, email, cpf, cep, phone, city, street, number, address_complement },
     where: { id },
   });
 
