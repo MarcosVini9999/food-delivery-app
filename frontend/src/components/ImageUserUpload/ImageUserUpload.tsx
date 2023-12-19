@@ -3,7 +3,7 @@ import { AxiosRequestConfig } from "axios";
 import apiFood from "@/services/apiFood";
 import useAuth from "@/context/AuthContext";
 
-export const ImageUpload: FC = () => {
+export const ImageUserUpload: FC = () => {
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [uploadProgress, setUploadProgress] = useState<number>(0);
   const { user } = useAuth();
