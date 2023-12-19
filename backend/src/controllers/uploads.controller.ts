@@ -19,10 +19,6 @@ async function Upload(request: IFastifyRequestWithUser, reply: FastifyReply) {
 
   const { id } = request.locals.user;
 
-  const user = await prisma.user.findUnique({
-    where: { id },
-  });
-
   await prisma.user.update({
     data: { avatar_url },
     where: { id },
