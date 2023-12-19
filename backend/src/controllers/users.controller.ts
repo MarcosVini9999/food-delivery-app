@@ -38,6 +38,8 @@ async function Create(request: FastifyRequest, reply: FastifyReply) {
     },
   });
 
+  await prisma.cart.create({ data: { userId: user.id } });
+
   if (!user) return reply.status(404).send();
 
   return reply.status(201).send(user.id);

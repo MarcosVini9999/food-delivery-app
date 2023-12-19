@@ -14,6 +14,7 @@ async function Login(request: FastifyRequest, reply: FastifyReply) {
 
   const user = await prisma.user.findUnique({
     where: { email },
+    include: { cart: true },
   });
 
   if (!user) return reply.status(404).send();
@@ -27,7 +28,7 @@ async function Login(request: FastifyRequest, reply: FastifyReply) {
     expiresIn: "10h",
   });
 
-  reply.status(200).send({ token, email });
+  reply.status(200).send({ token, email, id: user.id });
 }
 
 export { Login };
