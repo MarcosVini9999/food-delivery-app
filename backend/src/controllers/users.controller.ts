@@ -61,6 +61,7 @@ async function List(request: FastifyRequest, reply: FastifyReply) {
     street: user.street,
     number: user.number,
     address_complement: user.address_complement,
+    avatar_url: user.avatar_url,
     createdAt: user.createdAt,
     updatedAt: user.updatedAt,
   }));
@@ -88,6 +89,7 @@ async function Show(request: FastifyRequest, reply: FastifyReply) {
     street: user.street,
     number: user.number,
     address_complement: user.address_complement,
+    avatar_url: user.avatar_url,
     createdAt: user.createdAt,
     updatedAt: user.updatedAt,
   });
