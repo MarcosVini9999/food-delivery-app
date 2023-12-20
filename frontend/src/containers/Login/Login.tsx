@@ -1,95 +1,147 @@
 import useAuth from "@/context/AuthContext";
-import { ILogUser } from "@/interfaces/ILogUser";
 import apiFood from "@/services/apiFood";
-import { Visibility, VisibilityOff } from "@mui/icons-material";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useFormik } from "formik";
+import * as yup from "yup";
+import { AccountCircle, Lock, VisibilityOff, Visibility } from "@mui/icons-material";
 import {
   Box,
   Button,
   FormControl,
+  Input,
   IconButton,
   InputAdornment,
   InputLabel,
-  OutlinedInput,
-  TextField,
+  FormHelperText,
+  Typography,
+  Container,
+  Link,
 } from "@mui/material";
-import { FC, FormEvent, useState } from "react";
-import { useNavigate } from "react-router-dom";
 
-export const Login: FC = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+interface LoginForm {
+  email: string;
+  password: string;
+}
+
+interface Props {
+  changeLoginType: VoidFunction;
+}
+
+export const Login = ({ changeLoginType }: Props) => {
   const [showPassword, setShowPassword] = useState(false);
   const { authenticate } = useAuth();
   const navigate = useNavigate();
 
-  const handleEmail = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setEmail(event.target.value);
-  };
+  const validationSchema = yup.object({
+    email: yup.string().email("Insira um E-mail válido").required("Escreva seu E-mail"),
+    password: yup.string().required("Escreva sua senha"),
+  });
 
-  const handlePassword = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setPassword(event.target.value);
-  };
+  const formik = useFormik<LoginForm>({
+    initialValues: {
+      email: "",
+      password: "",
+    },
+    validationSchema,
+    async onSubmit(values) {
+      console.log(values);
 
-  const handleClickShowPassword = () => setShowPassword((show) => !show);
+      try {
+        const response = await apiFood.post("/login", { ...values });
+        authenticate({
+          token: response.data.token,
+          email: response.data.email,
+          id: response.data.id,
+        });
+      } catch (error) {
+        console.error(error);
+      }
 
-  const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault();
-  };
-
-  const handleLogin = async (event: FormEvent) => {
-    event.preventDefault();
-
-    if (!email) return;
-    if (!password) return;
-
-    const postData = {
-      email,
-      password,
-    };
-
-    let userData: ILogUser = {} as ILogUser;
-
-    try {
-      const response = await apiFood.post("/login", postData);
-      userData = response.data;
-    } catch (error) {
-      console.error(error);
-    }
-
-    if (!userData) return;
-
-    authenticate(userData);
-
-    navigate("/menu");
-  };
+      if ("loginok") navigate("/menu");
+    },
+  });
 
   return (
-    <Box>
-      <TextField value={email} onChange={handleEmail} label="Email" variant="outlined" />
-      <FormControl variant="outlined">
-        <InputLabel htmlFor="outlined-adornment-password">Senha</InputLabel>
-        <OutlinedInput
-          value={password}
-          onChange={handlePassword}
-          type={showPassword ? "text" : "password"}
-          endAdornment={
-            <InputAdornment position="end">
-              <IconButton
-                aria-label="toggle password visibility"
-                onClick={handleClickShowPassword}
-                onMouseDown={handleMouseDownPassword}
-                edge="end"
-              >
-                {showPassword ? <VisibilityOff /> : <Visibility />}
-              </IconButton>
-            </InputAdornment>
-          }
-          label="Password"
-        />
-      </FormControl>
-      <Button onClick={handleLogin} variant="contained">
-        Entrar
-      </Button>
-    </Box>
+    <Container maxWidth="lg">
+      <Box
+        sx={{
+          height: "100vh",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          flexDirection: "column",
+        }}
+      >
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            border: "1px solid lightgrey",
+            p: 5,
+            borderRadius: 5,
+            width: "50%",
+          }}
+        >
+          <Typography variant="h4">Login</Typography>
+          <Box display={"flex"} alignItems={"center"} justifyContent={"center"} width={"100%"}>
+            <AccountCircle sx={{ color: "action.active", mr: 1, mt: 2 }} />
+
+            <FormControl fullWidth sx={{ m: 1 }} variant="standard">
+              <InputLabel htmlFor="standard-adornment-email">E-mail</InputLabel>
+              <Input
+                id="standard-adornment-email"
+                type={"text"}
+                value={formik.values.email}
+                onChange={(e) => formik.setFieldValue("email", e.target.value)}
+                error={formik?.touched?.email && formik?.errors?.email ? true : false}
+              />
+            </FormControl>
+          </Box>
+          {formik?.touched?.email && formik?.errors?.email && (
+            <FormHelperText error>{formik?.errors?.email}</FormHelperText>
+          )}
+
+          <Box display={"flex"} alignItems={"center"} justifyContent={"center"} width={"100%"}>
+            <Lock sx={{ color: "action.active", mr: 1, mt: 2 }} />
+
+            <FormControl fullWidth sx={{ m: 1 }} variant="standard">
+              <InputLabel htmlFor="standard-adornment-email">Senha</InputLabel>
+              <Input
+                id="standard-adornment-email"
+                type={showPassword ? "text" : "password"}
+                value={formik.values.password}
+                onChange={(e) => formik.setFieldValue("password", e.target.value)}
+                error={formik?.touched?.password && formik?.errors?.password ? true : false}
+                endAdornment={
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={() => setShowPassword((old) => !old)}
+                    >
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                }
+              />
+            </FormControl>
+          </Box>
+          {formik?.touched?.password && formik?.errors?.password && (
+            <FormHelperText error>{formik?.errors?.password}</FormHelperText>
+          )}
+
+          <Button sx={{ mt: 3 }} fullWidth variant="contained" onClick={() => formik.submitForm()}>
+            Entrar
+          </Button>
+        </Box>
+        <Box display={"flex"} mt={2} justifyContent={"center"}>
+          <Typography>Não tem uma conta? &nbsp;</Typography>
+          <Link component="button" onClick={changeLoginType} underline="none" fontFamily={"Roboto"}>
+            Cadastre-se
+          </Link>
+        </Box>
+      </Box>
+    </Container>
   );
 };

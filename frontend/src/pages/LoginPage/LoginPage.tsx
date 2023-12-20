@@ -35,7 +35,7 @@ export const LoginPage: FC = () => {
   useEffect(() => {
     checkLogin();
   }, []);
-
+  // comentario legal
   return (
     <>
       {isToRegister ? (
@@ -46,9 +46,7 @@ export const LoginPage: FC = () => {
         </Box>
       ) : (
         <Box>
-          <Typography>Faça seu login</Typography>
-          <Login />
-          <button onClick={handleRegisterInterface}>Não tem uma conta ?</button>
+          <Login changeLoginType={handleRegisterInterface} />
         </Box>
       )}
     </>
