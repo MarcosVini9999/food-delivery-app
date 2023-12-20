@@ -107,9 +107,9 @@ export const Login = ({ changeLoginType }: Props) => {
             <Lock sx={{ color: "action.active", mr: 1, mt: 2 }} />
 
             <FormControl fullWidth sx={{ m: 1 }} variant="standard">
-              <InputLabel htmlFor="standard-adornment-email">Senha</InputLabel>
+              <InputLabel htmlFor="standard-adornment-password">Senha</InputLabel>
               <Input
-                id="standard-adornment-email"
+                id="standard-adornment-password"
                 type={showPassword ? "text" : "password"}
                 value={formik.values.password}
                 onChange={(e) => formik.setFieldValue("password", e.target.value)}

@@ -1,11 +1,14 @@
 import { FC } from "react";
 import { Router } from "@/routes/router";
 import { AuthProvider } from "@/context/AuthContext";
+import { CartProvider } from "@/context/CartContext";
 
 const App: FC = () => {
   return (
     <AuthProvider>
-      <Router />
+      <CartProvider>
+        <Router />
+      </CartProvider>
     </AuthProvider>
   );
 };

@@ -8,3 +8,12 @@ export interface IProduct {
   createdAt: string;
   updatedAt: string;
 }
+
+export interface ICartXProduct {
+  cartId: string;
+  productId: string;
+  quantity: number;
+  createdAt: string;
+  updatedAt: string;
+  product: IProduct;
+}
