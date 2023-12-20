@@ -1,268 +1,340 @@
 import useAuth from "@/context/AuthContext";
-import { ILogUser } from "@/interfaces/ILogUser";
 import apiFood from "@/services/apiFood";
-import { Visibility, VisibilityOff } from "@mui/icons-material";
+import {
+  AccountCircle,
+  Visibility,
+  VisibilityOff,
+  Lock,
+  Email,
+  Wallet,
+  Map,
+  Phone,
+  LocationCity,
+  Streetview,
+  House,
+  Signpost,
+} from "@mui/icons-material";
 import {
   Box,
   Button,
+  Container,
   FormControl,
+  FormHelperText,
   IconButton,
+  Input,
   InputAdornment,
   InputLabel,
-  OutlinedInput,
-  TextField,
+  Link,
+  Typography,
 } from "@mui/material";
-import axios from "axios";
-import { FC, useEffect, useState } from "react";
+import { useFormik } from "formik";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import * as yup from "yup";
 
-export const Register: FC = () => {
-  const [email, setEmail] = useState("");
-  const [name, setName] = useState("");
-  const [password, setPassword] = useState("");
+interface RegisterForm {
+  email: string;
+  password: string;
+  name: string;
+  cpf: string;
+  cep: string;
+  phone: string;
+  city: string;
+  street: string;
+  number: number;
+  address_complement: string;
+}
+
+interface Props {
+  changeLoginType: VoidFunction;
+}
+
+export const Register = ({ changeLoginType }: Props) => {
   const [showPassword, setShowPassword] = useState(false);
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [cpf, setCpf] = useState("");
-  const [cellphone, setCellphone] = useState("");
-  const [cep, setCep] = useState("");
-  const [city, setCity] = useState("");
-  const [street, setStreet] = useState("");
-  const [houseNumber, setHouseNumber] = useState("");
-  const [complement, setComplement] = useState("");
   const { authenticate } = useAuth();
   const navigate = useNavigate();
 
-  const handleEmail = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setEmail(event.target.value);
-  };
+  const validationSchema = yup.object({
+    email: yup.string().email("Insira um E-mail válido").required("Escreva seu E-mail"),
+    password: yup.string().required("Escreva sua senha"),
+    name: yup.string().required("Escreva seu nome"),
+    cpf: yup.string().required("Escreva seu CPF"),
+    cep: yup.string().required("Escreva seu CEP"),
+    phone: yup.number().required("Escreva seu telefone"),
+    city: yup.string().required("Escreva sua cidade"),
+    street: yup.string().required("Escreva sua rua"),
+    number: yup.number().required("Escreva o número da sua casa"),
+    address_complement: yup.string().required("Escreva o complemento do seu endereço"),
+  });
 
-  const handleName = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setName(event.target.value);
-  };
+  const formik = useFormik<RegisterForm>({
+    initialValues: {
+      email: "",
+      password: "",
+      name: "",
+      cpf: "",
+      cep: "",
+      phone: "",
+      city: "",
+      street: "",
+      number: 0,
+      address_complement: "",
+    },
+    validationSchema,
+    async onSubmit(...values) {
+      try {
+        await apiFood.post("/user", { ...values[0] });
 
-  const handlePassword = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setPassword(event.target.value);
-  };
+        const response = await apiFood.post("/login", {
+          email: values[0].email,
+          password: values[0].password,
+        });
 
-  const handleClickShowPassword = () => setShowPassword((show) => !show);
+        authenticate({
+          token: response.data.token,
+          email: response.data.email,
+          id: response.data.id,
+        });
+      } catch (error) {
+        console.error(error);
+      }
 
-  const handleConfirmPassword = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setConfirmPassword(event.target.value);
-  };
-
-  const handleCpf = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setCpf(event.target.value);
-  };
-
-  const handleCellphone = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setCellphone(event.target.value);
-  };
-
-  const handleCep = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setCep(event.target.value);
-  };
-
-  const handleCity = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setCity(event.target.value);
-  };
-
-  const handleStreet = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setStreet(event.target.value);
-  };
-
-  const handleHouseNumber = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setHouseNumber(event.target.value);
-  };
-
-  const handleComplement = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setComplement(event.target.value);
-  };
-
-  const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault();
-  };
-
-  const handleLogin = async () => {
-    if (!email) return;
-    if (!password) return;
-
-    const postData = {
-      email,
-      password,
-    };
-
-    let userData: ILogUser = {} as ILogUser;
-
-    try {
-      const response = await apiFood.post("/login", postData);
-      userData = response.data;
-    } catch (error) {
-      console.error(error);
-    }
-
-    if (!userData) return;
-
-    authenticate(userData);
-
-    navigate("/menu");
-  };
-
-  const handleUser = async () => {
-    if (!email) {
-      alert("Email não informado");
-      return;
-    }
-    if (!name) {
-      alert("Nome não informado");
-      return;
-    }
-    if (!password) {
-      alert("Senha não informada");
-      return;
-    }
-    if (!confirmPassword) {
-      alert("Confirmação de senha não informada");
-      return;
-    }
-    if (!cpf) {
-      alert("CPF não informado");
-      return;
-    }
-    if (!cellphone) {
-      alert("Celular não informado");
-      return;
-    }
-    if (!cep) {
-      alert("CEP não informado");
-      return;
-    }
-    if (!city) {
-      alert("Cidade não informada");
-      return;
-    }
-    if (!street) {
-      alert("Rua não informada");
-      return;
-    }
-    if (!houseNumber) {
-      alert("Número da casa não informado");
-      return;
-    }
-    if (!complement) {
-      alert("Complemento não informado");
-      return;
-    }
-    if (password !== confirmPassword) {
-      alert("Senhas não conferem");
-      return;
-    }
-
-    const requestBody = {
-      name,
-      email,
-      password,
-      cpf,
-      cep,
-      phone: cellphone,
-      city,
-      street,
-      number: houseNumber,
-      address_complement: complement,
-    };
-
-    let result: string | undefined = undefined;
-
-    try {
-      result = await apiFood.post("/user", requestBody);
-    } catch (error) {
-      console.error(error);
-    }
-
-    if (result) handleLogin();
-  };
-
-  const fetchCep = async () => {
-    if (cep.length != 8) return;
-    try {
-      const result = await axios.get(`https://viacep.com.br/ws/${cep}/json/`);
-      setCity(result.data.localidade);
-      setStreet(result.data.logradouro);
-      setComplement(result.data.complemento);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  useEffect(() => {
-    fetchCep();
-  }, [cep]);
+      if ("loginok") navigate("/menu");
+    },
+  });
 
   return (
-    <Box>
-      <TextField value={email} onChange={handleEmail} label="Email" variant="outlined" />
-      <TextField value={name} onChange={handleName} label="Nome" variant="outlined" />
-      <FormControl variant="outlined">
-        <InputLabel htmlFor="outlined-adornment-password">Senha</InputLabel>
-        <OutlinedInput
-          value={password}
-          onChange={handlePassword}
-          type={showPassword ? "text" : "password"}
-          endAdornment={
-            <InputAdornment position="end">
-              <IconButton
-                aria-label="toggle password visibility"
-                onClick={handleClickShowPassword}
-                onMouseDown={handleMouseDownPassword}
-                edge="end"
-              >
-                {showPassword ? <VisibilityOff /> : <Visibility />}
-              </IconButton>
-            </InputAdornment>
-          }
-          label="Password"
-        />
-      </FormControl>
-      <FormControl variant="outlined">
-        <InputLabel htmlFor="outlined-adornment-password">Confirme sua Senha</InputLabel>
-        <OutlinedInput
-          value={confirmPassword}
-          onChange={handleConfirmPassword}
-          type={showPassword ? "text" : "password"}
-          endAdornment={
-            <InputAdornment position="end">
-              <IconButton
-                aria-label="toggle password visibility"
-                onClick={handleClickShowPassword}
-                onMouseDown={handleMouseDownPassword}
-                edge="end"
-              >
-                {showPassword ? <VisibilityOff /> : <Visibility />}
-              </IconButton>
-            </InputAdornment>
-          }
-          label="Password"
-        />
-      </FormControl>
-      <TextField value={cpf} onChange={handleCpf} label="CPF" variant="outlined" />
-      <TextField value={cellphone} onChange={handleCellphone} label="Celular" variant="outlined" />
-      <TextField value={cep} onChange={handleCep} label="CEP" variant="outlined" minRows={8} />
-      <TextField value={city} onChange={handleCity} label="Cidade" variant="outlined" />
-      <TextField value={street} onChange={handleStreet} label="Rua" variant="outlined" />
-      <TextField
-        value={houseNumber}
-        onChange={handleHouseNumber}
-        label="Número da casa"
-        variant="outlined"
-      />
-      <TextField
-        value={complement}
-        onChange={handleComplement}
-        label="Complemento"
-        variant="outlined"
-      />
-      <Button onClick={handleUser} variant="contained">
-        Registrar
-      </Button>
-    </Box>
+    <Container maxWidth="lg">
+      <Box
+        sx={{
+          height: "100vh",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          flexDirection: "column",
+        }}
+      >
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            border: "1px solid lightgrey",
+            p: 5,
+            borderRadius: 5,
+            width: "50%",
+          }}
+        >
+          <Typography variant="h4">Registro</Typography>
+          <Box display={"flex"} alignItems={"center"} justifyContent={"center"} width={"100%"}>
+            <Email sx={{ color: "action.active", mr: 1, mt: 2 }} />
+
+            <FormControl fullWidth sx={{ m: 1 }} variant="standard">
+              <InputLabel htmlFor="standard-adornment-email">E-mail</InputLabel>
+              <Input
+                id="standard-adornment-email"
+                type={"text"}
+                value={formik.values.email}
+                onChange={(e) => formik.setFieldValue("email", e.target.value)}
+                error={formik?.touched?.email && formik?.errors?.email ? true : false}
+              />
+            </FormControl>
+          </Box>
+          {formik?.touched?.email && formik?.errors?.email && (
+            <FormHelperText error>{formik?.errors?.email}</FormHelperText>
+          )}
+
+          <Box display={"flex"} alignItems={"center"} justifyContent={"center"} width={"100%"}>
+            <Lock sx={{ color: "action.active", mr: 1, mt: 2 }} />
+
+            <FormControl fullWidth sx={{ m: 1 }} variant="standard">
+              <InputLabel htmlFor="standard-adornment-password">Senha</InputLabel>
+              <Input
+                id="standard-adornment-password"
+                type={showPassword ? "text" : "password"}
+                value={formik.values.password}
+                onChange={(e) => formik.setFieldValue("password", e.target.value)}
+                error={formik?.touched?.password && formik?.errors?.password ? true : false}
+                endAdornment={
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={() => setShowPassword((old) => !old)}
+                    >
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                }
+              />
+            </FormControl>
+          </Box>
+          {formik?.touched?.password && formik?.errors?.password && (
+            <FormHelperText error>{formik?.errors?.password}</FormHelperText>
+          )}
+
+          <Box display={"flex"} alignItems={"center"} justifyContent={"center"} width={"100%"}>
+            <AccountCircle sx={{ color: "action.active", mr: 1, mt: 2 }} />
+
+            <FormControl fullWidth sx={{ m: 1 }} variant="standard">
+              <InputLabel htmlFor="standard-adornment-name">Nome</InputLabel>
+              <Input
+                id="standard-adornment-name"
+                type={"text"}
+                value={formik.values.name}
+                onChange={(e) => formik.setFieldValue("name", e.target.value)}
+                error={formik?.touched?.name && formik?.errors?.name ? true : false}
+              />
+            </FormControl>
+          </Box>
+          {formik?.touched?.name && formik?.errors?.name && (
+            <FormHelperText error>{formik?.errors?.name}</FormHelperText>
+          )}
+
+          <Box display={"flex"} alignItems={"center"} justifyContent={"center"} width={"100%"}>
+            <Phone sx={{ color: "action.active", mr: 1, mt: 2 }} />
+
+            <FormControl fullWidth sx={{ m: 1 }} variant="standard">
+              <InputLabel htmlFor="standard-adornment-phone">Telefone</InputLabel>
+              <Input
+                id="standard-adornment-phone"
+                type={"text"}
+                value={formik.values.phone}
+                onChange={(e) => formik.setFieldValue("phone", e.target.value)}
+                error={formik?.touched?.phone && formik?.errors?.phone ? true : false}
+              />
+            </FormControl>
+          </Box>
+          {formik?.touched?.phone && formik?.errors?.phone && (
+            <FormHelperText error>{formik?.errors?.phone}</FormHelperText>
+          )}
+
+          <Box display={"flex"} alignItems={"center"} justifyContent={"center"} width={"100%"}>
+            <Wallet sx={{ color: "action.active", mr: 1, mt: 2 }} />
+
+            <FormControl fullWidth sx={{ m: 1 }} variant="standard">
+              <InputLabel htmlFor="standard-adornment-cpf">CPF</InputLabel>
+              <Input
+                id="standard-adornment-cpf"
+                type={"text"}
+                value={formik.values.cpf}
+                onChange={(e) => formik.setFieldValue("cpf", e.target.value)}
+                error={formik?.touched?.cpf && formik?.errors?.cpf ? true : false}
+              />
+            </FormControl>
+          </Box>
+          {formik?.touched?.cpf && formik?.errors?.cpf && (
+            <FormHelperText error>{formik?.errors?.cpf}</FormHelperText>
+          )}
+
+          <Box display={"flex"} alignItems={"center"} justifyContent={"center"} width={"100%"}>
+            <Box display={"flex"} alignItems={"center"} justifyContent={"center"} width={"100%"}>
+              <Map sx={{ color: "action.active", mr: 1, mt: 2 }} />
+
+              <FormControl fullWidth sx={{ m: 1 }} variant="standard">
+                <InputLabel htmlFor="standard-adornment-cep">CEP</InputLabel>
+                <Input
+                  id="standard-adornment-cep"
+                  type={"text"}
+                  value={formik.values.cep}
+                  onChange={(e) => formik.setFieldValue("cep", e.target.value)}
+                  error={formik?.touched?.cep && formik?.errors?.cep ? true : false}
+                />
+              </FormControl>
+            </Box>
+            {formik?.touched?.cep && formik?.errors?.cep && (
+              <FormHelperText error>{formik?.errors?.cep}</FormHelperText>
+            )}
+
+            <Box display={"flex"} alignItems={"center"} justifyContent={"center"} width={"100%"}>
+              <LocationCity sx={{ color: "action.active", mr: 1, mt: 2 }} />
+
+              <FormControl fullWidth sx={{ m: 1 }} variant="standard">
+                <InputLabel htmlFor="standard-adornment-city">Cidade</InputLabel>
+                <Input
+                  id="standard-adornment-city"
+                  type={"text"}
+                  value={formik.values.city}
+                  onChange={(e) => formik.setFieldValue("city", e.target.value)}
+                  error={formik?.touched?.city && formik?.errors?.city ? true : false}
+                />
+              </FormControl>
+            </Box>
+            {formik?.touched?.city && formik?.errors?.city && (
+              <FormHelperText error>{formik?.errors?.city}</FormHelperText>
+            )}
+          </Box>
+
+          <Box display={"flex"} alignItems={"center"} justifyContent={"center"} width={"100%"}>
+            <Box display={"flex"} alignItems={"center"} justifyContent={"center"} width={"100%"}>
+              <Streetview sx={{ color: "action.active", mr: 1, mt: 2 }} />
+
+              <FormControl fullWidth sx={{ m: 1 }} variant="standard">
+                <InputLabel htmlFor="standard-adornment-street">Rua</InputLabel>
+                <Input
+                  id="standard-adornment-street"
+                  type={"text"}
+                  value={formik.values.street}
+                  onChange={(e) => formik.setFieldValue("street", e.target.value)}
+                  error={formik?.touched?.street && formik?.errors?.street ? true : false}
+                />
+              </FormControl>
+            </Box>
+            {formik?.touched?.street && formik?.errors?.street && (
+              <FormHelperText error>{formik?.errors?.street}</FormHelperText>
+            )}
+
+            <Box display={"flex"} alignItems={"center"} justifyContent={"center"} width={"100%"}>
+              <House sx={{ color: "action.active", mr: 1, mt: 2 }} />
+
+              <FormControl fullWidth sx={{ m: 1 }} variant="standard">
+                <InputLabel htmlFor="standard-adornment-number">Número da casa</InputLabel>
+                <Input
+                  id="standard-adornment-number"
+                  type={"text"}
+                  value={formik.values.number}
+                  onChange={(e) => formik.setFieldValue("number", e.target.value)}
+                  error={formik?.touched?.number && formik?.errors?.number ? true : false}
+                />
+              </FormControl>
+            </Box>
+            {formik?.touched?.number && formik?.errors?.number && (
+              <FormHelperText error>{formik?.errors?.number}</FormHelperText>
+            )}
+          </Box>
+
+          <Box display={"flex"} alignItems={"center"} justifyContent={"center"} width={"100%"}>
+            <Signpost sx={{ color: "action.active", mr: 1, mt: 2 }} />
+
+            <FormControl fullWidth sx={{ m: 1 }} variant="standard">
+              <InputLabel htmlFor="standard-adornment-address_complement">Complemento</InputLabel>
+              <Input
+                id="standard-adornment-address_complement"
+                type={"text"}
+                value={formik.values.address_complement}
+                onChange={(e) => formik.setFieldValue("address_complement", e.target.value)}
+                error={
+                  formik?.touched?.address_complement && formik?.errors?.address_complement
+                    ? true
+                    : false
+                }
+              />
+            </FormControl>
+          </Box>
+          {formik?.touched?.address_complement && formik?.errors?.address_complement && (
+            <FormHelperText error>{formik?.errors?.address_complement}</FormHelperText>
+          )}
+
+          <Button sx={{ mt: 3 }} fullWidth variant="contained" onClick={() => formik.submitForm()}>
+            Registrar-se
+          </Button>
+        </Box>
+        <Box display={"flex"} mt={2} justifyContent={"center"}>
+          <Typography>Já tem uma conta ? &nbsp;</Typography>
+          <Link component="button" onClick={changeLoginType} underline="none" fontFamily={"Roboto"}>
+            Entre
+          </Link>
+        </Box>
+      </Box>
+    </Container>
   );
 };

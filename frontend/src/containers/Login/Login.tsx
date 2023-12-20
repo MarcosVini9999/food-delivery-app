@@ -45,8 +45,6 @@ export const Login = ({ changeLoginType }: Props) => {
     },
     validationSchema,
     async onSubmit(values) {
-      console.log(values);
-
       try {
         const response = await apiFood.post("/login", { ...values });
         authenticate({

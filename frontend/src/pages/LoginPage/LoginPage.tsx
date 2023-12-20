@@ -40,9 +40,7 @@ export const LoginPage: FC = () => {
     <>
       {isToRegister ? (
         <Box>
-          <Typography>Registre-se</Typography>
-          <Register />
-          <button onClick={handleRegisterInterface}>Você já tem uma conta ?</button>
+          <Register changeLoginType={handleRegisterInterface} />
         </Box>
       ) : (
         <Box>
