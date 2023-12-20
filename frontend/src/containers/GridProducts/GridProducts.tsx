@@ -3,6 +3,7 @@ import useCart from "@/context/CartContext";
 import { IProduct } from "@/interfaces/IProduct";
 import apiFood from "@/services/apiFood";
 import { capitalizeOnlyFirstLetter } from "@/utils/utils";
+import { Button, Grid, Paper, Typography } from "@mui/material";
 import { FC, useEffect, useState } from "react";
 
 export const GridProducts: FC = () => {
@@ -31,23 +32,53 @@ export const GridProducts: FC = () => {
   }, []);
 
   return (
-    <>
+    <Grid container spacing={2}>
       {products.map((product, index) => (
-        <div key={index}>
-          <img
-            src={`${apiFood.defaults.baseURL}/${product.image_url}`}
-            alt={`Imagem do ${product.name}`}
+        <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
+          <Paper
+            elevation={3}
             style={{
-              height: "300px",
+              padding: "16px",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
             }}
-          />
-          <h1>{capitalizeOnlyFirstLetter(product.name)}</h1>
-          <p>{capitalizeOnlyFirstLetter(product.description)}</p>
-          <p>R$ {product.price}</p>
-          <button onClick={() => alert("Em breve...")}>Comprar</button>
-          <button onClick={() => postNewProductOnCart(product)}>Adicionar ao carrinho</button>
-        </div>
+          >
+            <img
+              src={`${apiFood.defaults.baseURL}/${product.image_url}`}
+              alt={`Imagem do ${product.name}`}
+              style={{
+                height: "200px",
+                width: "100%",
+                objectFit: "cover",
+                marginBottom: "16px",
+              }}
+            />
+            <Typography variant="h6" style={{ marginBottom: "8px" }}>
+              {capitalizeOnlyFirstLetter(product.name)}
+            </Typography>
+            <Typography variant="body2" style={{ marginBottom: "8px" }}>
+              {capitalizeOnlyFirstLetter(product.description)}
+            </Typography>
+            <Typography variant="h6">R$ {product.price}</Typography>
+            <Button
+              variant="outlined"
+              onClick={() => alert("Em breve...")}
+              style={{ marginTop: "8px" }}
+            >
+              Comprar
+            </Button>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => postNewProductOnCart(product)}
+              style={{ marginTop: "8px" }}
+            >
+              Adicionar ao carrinho
+            </Button>
+          </Paper>
+        </Grid>
       ))}
-    </>
+    </Grid>
   );
 };
