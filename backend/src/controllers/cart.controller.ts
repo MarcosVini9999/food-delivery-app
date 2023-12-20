@@ -23,7 +23,7 @@ async function addProtuctToCart(request: FastifyRequest, reply: FastifyReply) {
   const BodySchema = z.object({
     userId: z.string(),
     productId: z.string(),
-    quantity: z.number(),
+    quantity: z.number().min(1),
   });
 
   const { userId, productId, quantity } = BodySchema.parse(request.body);
@@ -33,7 +33,7 @@ async function addProtuctToCart(request: FastifyRequest, reply: FastifyReply) {
     include: { cart: true },
   });
 
-  if (!user) return reply.status(404).send();
+  if (!user) return reply.status(404).send({ message: "User not found" });
 
   await prisma.cartXProduct.create({
     data: {
@@ -46,4 +46,62 @@ async function addProtuctToCart(request: FastifyRequest, reply: FastifyReply) {
   reply.status(201);
 }
 
-export { showCart, addProtuctToCart };
+async function deleteProductFromCart(request: FastifyRequest, reply: FastifyReply) {
+  const BodySchema = z.object({
+    userId: z.string(),
+    productId: z.string(),
+  });
+
+  const { userId, productId } = BodySchema.parse(request.body);
+
+  const user = await prisma.user.findUnique({
+    where: { id: String(userId) },
+    include: { cart: true },
+  });
+
+  if (!user) return reply.status(404).send({ message: "User not found" });
+
+  const cartXProduct = await prisma.cartXProduct.findUnique({
+    where: { cartId_productId: { cartId: user?.cart[0].id, productId } },
+  });
+
+  if (!cartXProduct) return reply.status(404).send({ message: "Product not found" });
+
+  await prisma.cartXProduct.delete({
+    where: { cartId_productId: { cartId: user?.cart[0].id, productId } },
+  });
+
+  reply.status(200);
+}
+
+async function updateProductFromCart(request: FastifyRequest, reply: FastifyReply) {
+  const BodySchema = z.object({
+    userId: z.string(),
+    productId: z.string(),
+    quantity: z.number().min(1),
+  });
+
+  const { userId, productId, quantity } = BodySchema.parse(request.body);
+
+  const user = await prisma.user.findUnique({
+    where: { id: String(userId) },
+    include: { cart: true },
+  });
+
+  if (!user) return reply.status(404).send({ message: "User not found" });
+
+  const cartXProduct = await prisma.cartXProduct.findUnique({
+    where: { cartId_productId: { cartId: user?.cart[0].id, productId } },
+  });
+
+  if (!cartXProduct) return reply.status(404).send({ message: "Product not found" });
+
+  await prisma.cartXProduct.update({
+    where: { cartId_productId: { cartId: user?.cart[0].id, productId } },
+    data: { quantity },
+  });
+
+  reply.status(200).send({ message: "Product updated" });
+}
+
+export { showCart, addProtuctToCart, deleteProductFromCart, updateProductFromCart };
