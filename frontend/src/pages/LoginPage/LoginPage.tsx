@@ -4,6 +4,7 @@ import apiFood from "@/services/apiFood";
 import useAuth from "@/context/AuthContext";
 import { Login, Register } from "@/containers";
 import { Box, Typography } from "@mui/material";
+import LoginBanner from "@/assets/images/login_banner.jpg";
 
 export const LoginPage: FC = () => {
   const { user } = useAuth();
@@ -35,18 +36,58 @@ export const LoginPage: FC = () => {
   useEffect(() => {
     checkLogin();
   }, []);
-  // comentario legal
+
   return (
-    <>
+    <Box
+      sx={{
+        height: "100vh",
+        display: "flex",
+        flexDirection: { xs: "column", md: "row" }, // Alteração aqui
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+      component="main"
+    >
+      <Box
+        sx={{
+          display: { xs: "none", md: "flex" },
+          flexDirection: "column",
+          alignItems: "center",
+          width: { xs: "100%", md: "50%" }, // Alteração aqui
+          margin: "50px",
+          padding: "20px",
+          boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
+          borderRadius: "8px",
+          backgroundColor: "#ffffff",
+        }}
+      >
+        <img
+          src={LoginBanner}
+          alt="banner login"
+          style={{
+            maxWidth: "100%",
+            marginBottom: "16px",
+            borderRadius: "8px",
+          }}
+        />
+        <Typography
+          variant="h6"
+          component="div"
+          sx={{
+            textAlign: "center",
+            marginBottom: "16px",
+            color: "#333333",
+          }}
+        >
+          Delicie-se com o melhor da gastronomia ao alcance de um toque - nosso app de comida traz
+          sabor e praticidade direto para você!
+        </Typography>
+      </Box>
       {isToRegister ? (
-        <Box>
-          <Register changeLoginType={handleRegisterInterface} />
-        </Box>
+        <Register changeLoginType={handleRegisterInterface} />
       ) : (
-        <Box>
-          <Login changeLoginType={handleRegisterInterface} />
-        </Box>
+        <Login changeLoginType={handleRegisterInterface} />
       )}
-    </>
+    </Box>
   );
 };

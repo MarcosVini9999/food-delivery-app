@@ -15,7 +15,6 @@ import {
   InputLabel,
   FormHelperText,
   Typography,
-  Container,
   Link,
 } from "@mui/material";
 
@@ -61,85 +60,82 @@ export const Login = ({ changeLoginType }: Props) => {
   });
 
   return (
-    <Container maxWidth="lg">
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        width: "100%",
+      }}
+    >
       <Box
         sx={{
-          height: "100vh",
           display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
           flexDirection: "column",
+          alignItems: "center",
+          border: "1px solid lightgrey",
+          p: 5,
+          borderRadius: 5,
+          width: "50%",
         }}
       >
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            border: "1px solid lightgrey",
-            p: 5,
-            borderRadius: 5,
-            width: "50%",
-          }}
-        >
-          <Typography variant="h4">Login</Typography>
-          <Box display={"flex"} alignItems={"center"} justifyContent={"center"} width={"100%"}>
-            <AccountCircle sx={{ color: "action.active", mr: 1, mt: 2 }} />
+        <Typography variant="h4">Login</Typography>
+        <Box display={"flex"} alignItems={"center"} justifyContent={"center"} width={"100%"}>
+          <AccountCircle sx={{ color: "action.active", mr: 1, mt: 2 }} />
 
-            <FormControl fullWidth sx={{ m: 1 }} variant="standard">
-              <InputLabel htmlFor="standard-adornment-email">E-mail</InputLabel>
-              <Input
-                id="standard-adornment-email"
-                type={"text"}
-                value={formik.values.email}
-                onChange={(e) => formik.setFieldValue("email", e.target.value)}
-                error={formik?.touched?.email && formik?.errors?.email ? true : false}
-              />
-            </FormControl>
-          </Box>
-          {formik?.touched?.email && formik?.errors?.email && (
-            <FormHelperText error>{formik?.errors?.email}</FormHelperText>
-          )}
-
-          <Box display={"flex"} alignItems={"center"} justifyContent={"center"} width={"100%"}>
-            <Lock sx={{ color: "action.active", mr: 1, mt: 2 }} />
-
-            <FormControl fullWidth sx={{ m: 1 }} variant="standard">
-              <InputLabel htmlFor="standard-adornment-password">Senha</InputLabel>
-              <Input
-                id="standard-adornment-password"
-                type={showPassword ? "text" : "password"}
-                value={formik.values.password}
-                onChange={(e) => formik.setFieldValue("password", e.target.value)}
-                error={formik?.touched?.password && formik?.errors?.password ? true : false}
-                endAdornment={
-                  <InputAdornment position="end">
-                    <IconButton
-                      aria-label="toggle password visibility"
-                      onClick={() => setShowPassword((old) => !old)}
-                    >
-                      {showPassword ? <VisibilityOff /> : <Visibility />}
-                    </IconButton>
-                  </InputAdornment>
-                }
-              />
-            </FormControl>
-          </Box>
-          {formik?.touched?.password && formik?.errors?.password && (
-            <FormHelperText error>{formik?.errors?.password}</FormHelperText>
-          )}
-
-          <Button sx={{ mt: 3 }} fullWidth variant="contained" onClick={() => formik.submitForm()}>
-            Entrar
-          </Button>
+          <FormControl fullWidth sx={{ m: 1 }} variant="standard">
+            <InputLabel htmlFor="standard-adornment-email">E-mail</InputLabel>
+            <Input
+              id="standard-adornment-email"
+              type={"text"}
+              value={formik.values.email}
+              onChange={(e) => formik.setFieldValue("email", e.target.value)}
+              error={formik?.touched?.email && formik?.errors?.email ? true : false}
+            />
+          </FormControl>
         </Box>
-        <Box display={"flex"} mt={2} justifyContent={"center"}>
-          <Typography>Não tem uma conta? &nbsp;</Typography>
-          <Link component="button" onClick={changeLoginType} underline="none" fontFamily={"Roboto"}>
-            Cadastre-se
-          </Link>
+        {formik?.touched?.email && formik?.errors?.email && (
+          <FormHelperText error>{formik?.errors?.email}</FormHelperText>
+        )}
+
+        <Box display={"flex"} alignItems={"center"} justifyContent={"center"} width={"100%"}>
+          <Lock sx={{ color: "action.active", mr: 1, mt: 2 }} />
+
+          <FormControl fullWidth sx={{ m: 1 }} variant="standard">
+            <InputLabel htmlFor="standard-adornment-password">Senha</InputLabel>
+            <Input
+              id="standard-adornment-password"
+              type={showPassword ? "text" : "password"}
+              value={formik.values.password}
+              onChange={(e) => formik.setFieldValue("password", e.target.value)}
+              error={formik?.touched?.password && formik?.errors?.password ? true : false}
+              endAdornment={
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label="toggle password visibility"
+                    onClick={() => setShowPassword((old) => !old)}
+                  >
+                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              }
+            />
+          </FormControl>
         </Box>
+        {formik?.touched?.password && formik?.errors?.password && (
+          <FormHelperText error>{formik?.errors?.password}</FormHelperText>
+        )}
+
+        <Button sx={{ mt: 3 }} fullWidth variant="contained" onClick={() => formik.submitForm()}>
+          Entrar
+        </Button>
       </Box>
-    </Container>
+      <Box display={"flex"} mt={2} justifyContent={"center"}>
+        <Typography>Não tem uma conta? &nbsp;</Typography>
+        <Link component="button" onClick={changeLoginType} underline="none" fontFamily={"Roboto"}>
+          Cadastre-se
+        </Link>
+      </Box>
+    </Box>
   );
 };
