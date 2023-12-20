@@ -154,110 +154,152 @@ export const ProfileUserPage: FC = () => {
 
   return (
     <>
-      <h1>BEM VINDO {userData.name}</h1>
-      <Box>
-        <h2>Dados do usuário</h2>
-        <img
-          src={
-            userData.avatar_url
-              ? `${apiFood.defaults.baseURL}/${userData.avatar_url}`
-              : DefaultImageUser
-          }
-          alt="avatar do usuário"
-          style={{
-            width: "200px",
-          }}
-        />
-        <Typography>Email: {userData.email}</Typography>
-        <Typography>Nome: {userData.name}</Typography>
-        <Typography>CPF: {userData.cpf}</Typography>
-        <Typography>Celular: {userData.phone}</Typography>
-        <Typography>CEP: {userData.cep}</Typography>
-        <Typography>Cidade: {userData.city}</Typography>
-        <Typography>Rua: {userData.street}</Typography>
-        <Typography>Número da casa: {userData.number}</Typography>
-        <Typography>Complemento: {userData.address_complement}</Typography>
-      </Box>
-      <Box>
-        <h2>Atualizar dados</h2>
-        <TextField value={email} onChange={handleEmail} label="Email" variant="outlined" />
-        <TextField value={name} onChange={handleName} label="Nome" variant="outlined" />
-        <TextField value={cpf} onChange={handleCpf} label="CPF" variant="outlined" />
-        <TextField
-          value={cellphone}
-          onChange={handleCellphone}
-          label="Celular"
-          variant="outlined"
-        />
-        <TextField value={cep} onChange={handleCep} label="CEP" variant="outlined" minRows={8} />
-        <TextField value={city} onChange={handleCity} label="Cidade" variant="outlined" />
-        <TextField value={street} onChange={handleStreet} label="Rua" variant="outlined" />
-        <TextField
-          value={houseNumber}
-          onChange={handleHouseNumber}
-          label="Número da casa"
-          variant="outlined"
-        />
-        <TextField
-          value={complement}
-          onChange={handleComplement}
-          label="Complemento"
-          variant="outlined"
-        />
+      <Box
+        sx={{
+          backgroundColor: "#35BF98",
+          color: "#FFFFFF",
+          padding: "20px",
+          borderRadius: "10px",
+          maxWidth: "600px",
+          marginInline: "auto",
+          marginBlock: "20px",
+        }}
+      >
+        <Typography variant="h4">BEM VINDO {userData.name}</Typography>
 
-        <Button onClick={updateUser} variant="contained">
-          Atualizar
-        </Button>
-      </Box>
-      <Box>
-        <h2>Atualizar senha</h2>
-        <FormControl variant="outlined">
-          <InputLabel htmlFor="outlined-adornment-password">Senha</InputLabel>
-          <OutlinedInput
-            value={password}
-            onChange={handlePassword}
-            type={showPassword ? "text" : "password"}
-            endAdornment={
-              <InputAdornment position="end">
-                <IconButton
-                  aria-label="toggle password visibility"
-                  onClick={handleClickShowPassword}
-                  onMouseDown={handleMouseDownPassword}
-                  edge="end"
-                >
-                  {showPassword ? <VisibilityOff /> : <Visibility />}
-                </IconButton>
-              </InputAdornment>
+        <Box sx={{ marginTop: "20px", textAlign: "center" }}>
+          <Typography variant="h5">Dados do usuário</Typography>
+          <img
+            src={
+              userData.avatar_url
+                ? `${apiFood.defaults.baseURL}/${userData.avatar_url}`
+                : DefaultImageUser
             }
-            label="Password"
+            alt="avatar do usuário"
+            style={{ width: "200px", borderRadius: "50%", margin: "20px auto" }}
           />
-        </FormControl>
-        <FormControl variant="outlined">
-          <InputLabel htmlFor="outlined-adornment-password">Confirme sua Senha</InputLabel>
-          <OutlinedInput
-            value={confirmPassword}
-            onChange={handleConfirmPassword}
-            type={showPassword ? "text" : "password"}
-            endAdornment={
-              <InputAdornment position="end">
-                <IconButton
-                  aria-label="toggle password visibility"
-                  onClick={handleClickShowPassword}
-                  onMouseDown={handleMouseDownPassword}
-                  edge="end"
-                >
-                  {showPassword ? <VisibilityOff /> : <Visibility />}
-                </IconButton>
-              </InputAdornment>
-            }
-            label="Password"
+          <Typography>Email: {userData.email}</Typography>
+          <Typography>Nome: {userData.name}</Typography>
+          <Typography>CPF: {userData.cpf}</Typography>
+          <Typography>Celular: {userData.phone}</Typography>
+          <Typography>CEP: {userData.cep}</Typography>
+          <Typography>Cidade: {userData.city}</Typography>
+          <Typography>Rua: {userData.street}</Typography>
+          <Typography>Número da casa: {userData.number}</Typography>
+          <Typography>Complemento: {userData.address_complement}</Typography>
+        </Box>
+
+        <Box sx={{ marginTop: "20px" }}>
+          <Typography variant="h5">Atualizar Foto de perfil</Typography>
+          <ImageUserUpload />
+        </Box>
+
+        <Box sx={{ marginTop: "20px" }}>
+          <Typography variant="h5">Atualizar dados</Typography>
+          <TextField
+            value={email}
+            onChange={handleEmail}
+            label="Email"
+            variant="outlined"
+            fullWidth
           />
-        </FormControl>
-        <Button onClick={() => alert("Em futuras atualizações")} variant="contained">
-          Atualizar
-        </Button>
+          <TextField value={name} onChange={handleName} label="Nome" variant="outlined" fullWidth />
+          <TextField value={cpf} onChange={handleCpf} label="CPF" variant="outlined" fullWidth />
+          <TextField
+            value={cellphone}
+            onChange={handleCellphone}
+            label="Celular"
+            variant="outlined"
+            fullWidth
+          />
+          <TextField value={cep} onChange={handleCep} label="CEP" variant="outlined" fullWidth />
+          <TextField
+            value={city}
+            onChange={handleCity}
+            label="Cidade"
+            variant="outlined"
+            fullWidth
+          />
+          <TextField
+            value={street}
+            onChange={handleStreet}
+            label="Rua"
+            variant="outlined"
+            fullWidth
+          />
+          <TextField
+            value={houseNumber}
+            onChange={handleHouseNumber}
+            label="Número da casa"
+            variant="outlined"
+            fullWidth
+          />
+          <TextField
+            value={complement}
+            onChange={handleComplement}
+            label="Complemento"
+            variant="outlined"
+            fullWidth
+          />
+
+          <Button onClick={updateUser} variant="contained" sx={{ marginTop: "15px" }}>
+            Atualizar
+          </Button>
+        </Box>
+
+        <Box sx={{ marginTop: "20px" }}>
+          <Typography variant="h5">Atualizar senha</Typography>
+          <FormControl variant="outlined" fullWidth sx={{ marginTop: "10px" }}>
+            <InputLabel htmlFor="outlined-adornment-password">Senha</InputLabel>
+            <OutlinedInput
+              value={password}
+              onChange={handlePassword}
+              type={showPassword ? "text" : "password"}
+              endAdornment={
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label="toggle password visibility"
+                    onClick={handleClickShowPassword}
+                    onMouseDown={handleMouseDownPassword}
+                    edge="end"
+                  >
+                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              }
+              label="Password"
+            />
+          </FormControl>
+          <FormControl variant="outlined" fullWidth sx={{ marginTop: "10px" }}>
+            <InputLabel htmlFor="outlined-adornment-password">Confirme sua Senha</InputLabel>
+            <OutlinedInput
+              value={confirmPassword}
+              onChange={handleConfirmPassword}
+              type={showPassword ? "text" : "password"}
+              endAdornment={
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label="toggle password visibility"
+                    onClick={handleClickShowPassword}
+                    onMouseDown={handleMouseDownPassword}
+                    edge="end"
+                  >
+                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              }
+              label="Password"
+            />
+          </FormControl>
+          <Button
+            onClick={() => alert("Em futuras atualizações")}
+            variant="contained"
+            sx={{ marginTop: "15px" }}
+          >
+            Atualizar
+          </Button>
+        </Box>
       </Box>
-      <ImageUserUpload />
     </>
   );
 };
