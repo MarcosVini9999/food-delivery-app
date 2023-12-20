@@ -60,48 +60,15 @@ export const Header: FC = () => {
     setDrawerOpen(open);
   };
 
-  const list = () => (
-    <Box
-      sx={{
-        width: 200,
-        backgroundColor: "#F8B400", // Cor principal
-        height: "100%",
-        color: "#fff",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        padding: "1rem",
-      }}
-    >
-      <List>
-        <ListItem>
-          <Link to="/menu" style={buttonLinkStyle}>
-            Menu
-          </Link>
-        </ListItem>
-        <ListItem>
-          <Link to="/profile" style={buttonLinkStyle}>
-            Perfil
-          </Link>
-        </ListItem>
-        <ListItem>
-          <Link to="/cart" style={buttonLinkStyle}>
-            Seu carrinho ({totalProducts})
-          </Link>
-        </ListItem>
-      </List>
-    </Box>
-  );
-
   return (
     <Box
       sx={{
-        backgroundColor: "#F8B400", // Cor principal
+        backgroundColor: "#F8B400",
         padding: "1rem",
         display: "flex",
         justifyContent: "space-between",
         alignItems: "center",
-        boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)", // Sombra suave
+        boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
       }}
     >
       {isMobile && (
@@ -149,7 +116,7 @@ export const Header: FC = () => {
           variant="contained"
           onClick={logout}
           sx={{
-            backgroundColor: "#D32F2F", // Cor de botão de logout
+            backgroundColor: "#D32F2F",
             color: "#fff",
           }}
         >
@@ -163,11 +130,40 @@ export const Header: FC = () => {
         sx={{
           zIndex: (theme) => theme.zIndex.drawer + 1,
           "& .MuiDrawer-paper": {
-            backgroundColor: "#F8B400", // Cor de fundo do menu lateral
+            backgroundColor: "#F8B400",
           },
         }}
       >
-        {list()}
+        <Box
+          sx={{
+            width: 200,
+            backgroundColor: "#F8B400", // Cor principal
+            height: "100%",
+            color: "#fff",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            padding: "1rem",
+          }}
+        >
+          <List>
+            <ListItem>
+              <Link to="/menu" style={buttonLinkStyle}>
+                Menu
+              </Link>
+            </ListItem>
+            <ListItem>
+              <Link to="/profile" style={buttonLinkStyle}>
+                Perfil
+              </Link>
+            </ListItem>
+            <ListItem>
+              <Link to="/cart" style={buttonLinkStyle}>
+                Seu carrinho ({totalProducts})
+              </Link>
+            </ListItem>
+          </List>
+        </Box>
       </Drawer>
     </Box>
   );
