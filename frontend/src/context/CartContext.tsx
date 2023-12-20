@@ -22,6 +22,12 @@ const CartProvider: FC<ProductProviderProps> = ({ children }) => {
   const cartListMemo = useMemo(() => productCartList, [productCartList]);
   const { user } = useAuth();
 
+  const hasProductOnCart = (Product: IProduct) => {
+    if (cartListMemo) {
+      return cartListMemo.some((item) => item.productId === Product.id);
+    }
+  };
+
   const createCart = async () => {
     try {
       const result = await apiFood.get(`/cart/${user.id}`, {
@@ -41,6 +47,14 @@ const CartProvider: FC<ProductProviderProps> = ({ children }) => {
   };
 
   const postNewProductOnCart = async (Product: IProduct) => {
+    if (hasProductOnCart(Product)) {
+      const quantity = cartListMemo?.find((item) => item.productId === Product.id)?.quantity;
+
+      updateProductFromCart(Product, (quantity ? quantity : 0) + 1);
+
+      return;
+    }
+
     try {
       await apiFood.post(
         "/cart",
