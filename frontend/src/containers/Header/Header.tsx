@@ -63,7 +63,7 @@ export const Header: FC = () => {
   return (
     <Box
       sx={{
-        backgroundColor: "#F8B400",
+        backgroundColor: "#35BF98",
         padding: "1rem",
         display: "flex",
         justifyContent: "space-between",
@@ -130,14 +130,14 @@ export const Header: FC = () => {
         sx={{
           zIndex: (theme) => theme.zIndex.drawer + 1,
           "& .MuiDrawer-paper": {
-            backgroundColor: "#F8B400",
+            backgroundColor: "#35BF98",
           },
         }}
       >
         <Box
           sx={{
             width: 200,
-            backgroundColor: "#F8B400", // Cor principal
+            backgroundColor: "#35BF98",
             height: "100%",
             color: "#fff",
             display: "flex",
