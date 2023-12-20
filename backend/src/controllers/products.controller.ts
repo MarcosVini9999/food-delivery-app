@@ -91,6 +91,10 @@ async function updateProduct(request: FastifyRequest, reply: FastifyReply) {
 async function deleteProduct(request: FastifyRequest, reply: FastifyReply) {
   const { id } = ParamsSchema.parse(request.params);
 
+  await prisma.cartXProduct.deleteMany({
+    where: { productId: id },
+  });
+
   await prisma.product.delete({
     where: { id },
   });
