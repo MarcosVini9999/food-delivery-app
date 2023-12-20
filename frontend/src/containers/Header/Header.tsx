@@ -83,9 +83,12 @@ export const Header: FC = () => {
           <MenuIcon />
         </IconButton>
       )}
-      <Typography variant="h4" sx={{ margin: 0, color: "#fff" }}>
+      <Link
+        style={{ margin: 0, color: "#fff", textDecoration: "none", fontSize: "40px" }}
+        to="/menu"
+      >
         The Food
-      </Typography>
+      </Link>
       {!isMobile && (
         <Box sx={{ display: "flex", gap: "1rem" }}>
           <Link to="/menu" style={buttonLinkStyle}>
@@ -100,8 +103,11 @@ export const Header: FC = () => {
         </Box>
       )}
       <Box sx={{ display: "flex", alignItems: "center" }}>
-        <Typography variant="body1" sx={{ marginRight: "1rem", color: "#fff" }}>
-          Bem Vindo {userData.name}
+        <Typography
+          variant="body1"
+          sx={{ marginRight: "1rem", color: "#fff", display: { xs: "none", md: "block" } }}
+        >
+          Bem vindo <Typography variant="subtitle2">{userData.name}</Typography>
         </Typography>
         <img
           src={
