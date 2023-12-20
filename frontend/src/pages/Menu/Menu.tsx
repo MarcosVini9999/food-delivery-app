@@ -1,9 +1,10 @@
+import { GridProducts } from "@/containers";
 import { FC } from "react";
 
 export const Menu: FC = () => {
   return (
     <>
-      <h1>Menu</h1>
+      <GridProducts />
     </>
   );
 };

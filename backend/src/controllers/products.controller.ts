@@ -8,7 +8,7 @@ async function createProduct(request: FastifyRequest, reply: FastifyReply) {
     name: z.string(),
     description: z.string(),
     price: z.number(),
-    image_url: z.string(),
+    image_url: z.string().optional(),
     stock: z.number(),
   });
 
