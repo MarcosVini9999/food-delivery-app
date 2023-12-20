@@ -27,8 +27,9 @@ import {
   Link,
   Typography,
 } from "@mui/material";
+import axios from "axios";
 import { useFormik } from "formik";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import * as yup from "yup";
 
@@ -102,6 +103,22 @@ export const Register = ({ changeLoginType }: Props) => {
       if ("loginok") navigate("/menu");
     },
   });
+
+  const fetchCep = async () => {
+    if (formik.values.cep.length != 8) return;
+    try {
+      const result = await axios.get(`https://viacep.com.br/ws/${formik.values.cep}/json/`);
+      formik.setFieldValue("city", result.data.localidade);
+      formik.setFieldValue("street", result.data.logradouro);
+      formik.setFieldValue("address_complement", result.data.complemento);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchCep();
+  }, [formik.values.cep]);
 
   return (
     <Container maxWidth="lg">
