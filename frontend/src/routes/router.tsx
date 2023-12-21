@@ -1,7 +1,14 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { FC, Fragment } from "react";
 import { Outlet } from "react-router-dom";
-import { CartPage, HelloWorldPage, LoginPage, MenuPage, ProfileUserPage } from "@/pages";
+import {
+  AdminProduct,
+  CartPage,
+  HelloWorldPage,
+  LoginPage,
+  MenuPage,
+  ProfileUserPage,
+} from "@/pages";
 import { PrivateRoute } from "@/routes/PrivateRoute";
 import useAuth from "@/context/AuthContext";
 import { Layout } from "@/containers";
@@ -31,6 +38,7 @@ export const Router: FC = () => {
               <Route path="/menu" element={<MenuPage />} />
               <Route path="/profile" element={<ProfileUserPage />} />
               <Route path="/cart" element={<CartPage />} />
+              <Route path="/admin-product" element={<AdminProduct />} />
             </Route>
           </Route>
         </Route>

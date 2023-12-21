@@ -1,4 +1,4 @@
-import { ImageUserUpload } from "@/components";
+import { ImageUpload } from "@/components";
 import useAuth from "@/context/AuthContext";
 import { IUser } from "@/interfaces/IUser";
 import apiFood from "@/services/apiFood";
@@ -191,7 +191,7 @@ export const ProfileUserPage: FC = () => {
 
         <Box sx={{ marginTop: "20px" }}>
           <Typography variant="h5">Atualizar Foto de perfil</Typography>
-          <ImageUserUpload />
+          <ImageUpload path="/upload" />
         </Box>
 
         <Box sx={{ marginTop: "20px" }}>

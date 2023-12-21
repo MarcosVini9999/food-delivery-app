@@ -100,6 +100,9 @@ export const Header: FC = () => {
           <Link to="/cart" style={buttonLinkStyle}>
             Seu carrinho ({totalProducts})
           </Link>
+          <Link to="/admin-product" style={buttonLinkStyle}>
+            Criar produto
+          </Link>
         </Box>
       )}
       <Box sx={{ display: "flex", alignItems: "center" }}>
@@ -166,6 +169,11 @@ export const Header: FC = () => {
             <ListItem>
               <Link to="/cart" style={buttonLinkStyle}>
                 Seu carrinho ({totalProducts})
+              </Link>
+            </ListItem>
+            <ListItem>
+              <Link to="/admin-product" style={buttonLinkStyle}>
+                Criar produto
               </Link>
             </ListItem>
           </List>

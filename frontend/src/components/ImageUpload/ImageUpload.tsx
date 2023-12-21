@@ -3,7 +3,12 @@ import { AxiosRequestConfig } from "axios";
 import apiFood from "@/services/apiFood";
 import useAuth from "@/context/AuthContext";
 
-export const ImageUserUpload: FC = () => {
+interface ImageUserUploadProps {
+  path: string;
+  onClick?: () => void;
+}
+
+export const ImageUpload: FC<ImageUserUploadProps> = ({ path, onClick }) => {
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [uploadProgress, setUploadProgress] = useState<number>(0);
   const { user } = useAuth();
@@ -38,7 +43,7 @@ export const ImageUserUpload: FC = () => {
     };
 
     try {
-      await apiFood.post("/upload", formData, config);
+      await apiFood.post(path, formData, config);
 
       setSelectedImage(null);
       setUploadProgress(0);
@@ -50,7 +55,14 @@ export const ImageUserUpload: FC = () => {
   return (
     <div>
       <input type="file" onChange={handleImageChange} />
-      <button onClick={handleUpload}>Fazer Upload</button>
+      <button
+        onClick={() => {
+          handleUpload();
+          if (onClick) onClick();
+        }}
+      >
+        Fazer Upload
+      </button>
 
       {uploadProgress > 0 && (
         <div>
@@ -62,7 +74,13 @@ export const ImageUserUpload: FC = () => {
       {selectedImage && (
         <div>
           <p>Imagem selecionada:</p>
-          <img src={URL.createObjectURL(selectedImage)} alt="Imagem selecionada" />
+          <img
+            src={URL.createObjectURL(selectedImage)}
+            alt="Imagem selecionada"
+            style={{
+              width: "300px",
+            }}
+          />
         </div>
       )}
     </div>
