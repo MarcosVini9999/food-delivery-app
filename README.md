@@ -2,8 +2,6 @@
 
 A high-performance food delivery app, created using React, Fastify, and React Native. Enjoy a seamless user experience on both web and mobile platforms, featuring quick order placement, real-time tracking, and personalized recommendations for a hassle-free dining experience.
 
-![Image](https://github.com/users/MarcosVini9999/projects/1/assets/66041553/37be69c0-ae07-465d-ab53-6b8e626e6524)
-
 ## 🔑 Before we start...
 
 You need to create a .env file in the backend folder !
